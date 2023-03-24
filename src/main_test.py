@@ -155,7 +155,49 @@ def main():
                     if legal_wall_position(random_loc_bis):
                         return(random_loc,random_loc_bis)
                     
+    
+    def strat_block_it(joueur,joueur_adv,pos_joueur, pos_adv,last_adv, nb_gauche):
+        """
+        ====================================================================================
+        Stratégie block it 
+        le joueur <joueur> applique la stratégie 
+        La variable pos_adv contient la position de l'adversaire 
+        La variable last_adv contient le dernier CHOIX de l'adversaire (mur ou deplacer) 
+            si c'est l'ouverture et que le joueur en face n'a pas encore joué, alors last_adv == None
 
+
+        
+        Cette fonction retourne un tuple {choix, mur, position}. Les return possibles sont :
+        -----------------------
+        => {choix : "mur", mur : M1, deplacer : None}
+        c'est le premier mur placé par le joueur, soit 
+            - après le premier deplacement du joueur adversaire, tour 2 
+            - au tour 1 
+
+        -----------------------
+        => {choix : "mur", mur : position du mur, deplacer : None}
+        c'est le cas ou le joueur pose un mur de sa rangée de mur pour bloquer l'adversaire
+
+        # -----------------------
+        # => {choix : "deplacer", mur : None, deplacer : position ou le joueur se deplace}
+        # c'est le cas ou le joueur se deplace 
+        #     - ses 2 premiers deplacements sont vers la gauche (donc tant que nb_gauche > 0)
+        #     - les deplacements suivants suivent A-STAR (si nb_gauche == 0)
+        
+        # -----------------------
+
+        # """
+        # # CAS D'OUVERTURE (depend de qui commence)
+
+        # # cas ou notre joueur commence 
+        # if last_adv == None:
+        #     # notre joueur place le mur M1 qui est situé à gauche (ou a droite par rapport au joueur_adv) du joueur_adv
+        #     lig_adv,col_adv = initStates[joueur_adv]
+        #     posPlayers[1]=(row,col)
+        #     players[1].set_rowcol(row,col)
+                    
+
+    
     g =np.ones((nbLignes,nbCols),dtype=bool)  # une matrice remplie par defaut a True  
     for w in wallStates(allWalls):            # on met False quand murs
             g[w]=False
@@ -168,83 +210,151 @@ def main():
         g[i][1]=False
         g[i][nbLignes-1]=False
         g[i][nbLignes-2]=False
+    
+    # nombres de murs en reserves pour les joueurs 0 et 1 
     l1 = len(walls[0])
     l2 = len(walls[1])
+
+    # nombres de murs posés par j0 (i) et j1 (k)
     i = 0
     k = 0
+
+    # initialisation des variables de choix et de joueurs 
     jeu = ["mur","deplacer"]
     joueurs = ["j0","j1"]
     j = random.choice(joueurs)
     posPlayers = initStates
     print("Le joueur : ",j," va commencer")
+
+
+    ########################################################################################
+    ########################################################################################
+    ################################ LANCEMENT DU JEU ######################################
+    ########################################################################################
+    ########################################################################################
+
     for a in range(iterations):
+        # le joueur j0 joue :
         if j == "j0":
+            #passage de main pour le tour suivant 
             j = "j1"
+
             choix = random.choice(jeu)
             p = ProblemeGrid2D(initStates[0],objectifs[0],g,'manhattan')
-            path_j1 = probleme.astar(p,verbose=False)
+            path_j0 = probleme.astar(p,verbose=False)
+
+            # il choisit de poser un mur et il y a assez de mur 
             if choix == "mur" and l1 > 0:
+
+                # tant que le mur n'est pas pose, on recommence
                 while True :
+
+                    # on choisit une position legale
                     ((x1,y1),(x2,y2)) = draw_random_wall_location()
+
+                    print(walls[0][i])
+                    # on pose les murs en changeant leurs positions (a la position legale ci-dessus)
                     walls[0][i].set_rowcol(x1,y1)
                     walls[0][i+1].set_rowcol(x2,y2)
+
+                    # dans la matrice, les murs aussi sont poses 
                     g[x1][y1]=False
                     g[x2][y2]=False
-                    p = ProblemeGrid2D(initStates[0],objectifs[0],g,'manhattan')
-                    path_j1 = probleme.astar(p,verbose=False)
-                    print("Path après mur j0",path_j1)
-                    if objectifs[0] in path_j1:                     
+
+                    # on calcule le chemin pour le joueur 
+                    pj0 = ProblemeGrid2D(initStates[0],objectifs[0],g,'manhattan')
+                    path_j0 = probleme.astar(pj0,verbose=False)
+
+                    # on calcule aussi le chemin pour le joueur adverse afin de voir si le mur posé bloque
+                    p1_test = ProblemeGrid2D(initStates[1],objectifs[1],g,'manhattan')
+                    path_j1_test = probleme.astar(p1_test,verbose=False)
+
+                    print("Path après mur j0",path_j0)
+
+                    # si le mur ne bloque pas l'acces a l'objectif, alors on pose !
+                    if objectifs[0] in path_j0 and objectifs[1] in path_j1_test:                     
                         i = i + 2
                         l1 = l1 - 2
                         print("mur bien placé j0",i,l1)
                         game.mainiteration()
                         break
+
+                    # sinon, on retire le mur et on recommence 
                     g[x1][y1]=True
                     g[x2][y2]=True
-                    game.mainiteration()
+
+
             else: # se déplace
+                # on definit le chemin avec A*
                 p = ProblemeGrid2D(initStates[0],objectifs[0],g,'manhattan')
-                path_j1 = probleme.astar(p,verbose=False)
-                print ("Chemin trouvé j0:", path_j1)
-                row,col = path_j1[1]
-                posPlayers[0]=(row,col)
-                players[0].set_rowcol(row,col)
-                print ("pos joueur 0:", row,col)
-                if (row,col) == objectifs[0]:
+                path_j0 = probleme.astar(p,verbose=False)
+                print ("Chemin trouvé j0:", path_j0)
+
+                # on avance
+                row0,col0 = path_j0[1]
+                posPlayers[0]=(row0,col0)
+                players[0].set_rowcol(row0,col0)
+                print ("pos joueur 0:", row0,col0)
+
+                # on verifie si le joueur a atteint sa position
+                if (row0,col0) == objectifs[0]:
                     print("le joueur 0 a atteint son but!")
                     break
                 game.mainiteration()
+
+        # le joueur j1 joue 
         else:
+            # passage de main pour le tour suivant 
             j = "j0"
+
             choix = random.choice(jeu)
+            # cas ou on pose un mur 
             if choix == "mur" and l2 > 0:
                 while True :
+
+                    # on pose un mur 
                     ((x1,y1),(x2,y2)) = draw_random_wall_location()
                     walls[1][k].set_rowcol(x1,y1)
                     walls[1][k+1].set_rowcol(x2,y2)
                     g[x1][y1]=False
                     g[x2][y2]=False
+
+                    # on definit le chemin du joueur avec A*
                     p = ProblemeGrid2D(initStates[1],objectifs[1],g,'manhattan')
                     path_j2 = probleme.astar(p,verbose=False)
                     print("Path après mur j1",path_j2)
-                    if objectifs[1] in path_j2: # and path de joueur 0                      
+
+                    # on calcule aussi le chemin pour le joueur adverse afin de voir si le mur posé bloque
+                    p0_test = ProblemeGrid2D(initStates[0],objectifs[0],g,'manhattan')
+                    path_j0_test = probleme.astar(p0_test,verbose=False)
+
+                    # si le mur ne bloque pas l'acces a l'objectif, alors on pose !
+                    if objectifs[1] in path_j2 and objectifs[0] in path_j0_test: # and path de joueur 0                      
                         k = k + 2
                         l2 = l2 - 2
                         print("mur bien placé j1",k,l2)
                         game.mainiteration()
                         break
+
+                    # sinon on retire le mur et on recommence 
                     g[x1][y1]=True
                     g[x2][y2]=True
-                    game.mainiteration()
+
+            # sinon, j1 se deplace
             else:
+                # chemin 
                 p = ProblemeGrid2D(initStates[1],objectifs[1],g,'manhattan')
                 path_j2 = probleme.astar(p,verbose=False)
                 print ("Chemin trouvé j1:", path_j2)
-                row,col = path_j2[1]
-                posPlayers[1]=(row,col)
-                players[1].set_rowcol(row,col)
-                print ("pos joueur 1:", row,col)
-                if (row,col) == objectifs[1]:
+
+                # deplacement du joueur 
+                row1,col1 = path_j2[1]
+                posPlayers[1]=(row1,col1)
+                players[1].set_rowcol(row1,col1)
+                print ("pos joueur 1:", row1,col1)
+
+                # si j1 a atteint l'objectif 
+                if (row1,col1) == objectifs[1]:
                     print("le joueur 1 a atteint son but!")
                     break
                 game.mainiteration()
@@ -331,5 +441,4 @@ def main():
 if __name__ == '__main__':
     main()
     
-
 
