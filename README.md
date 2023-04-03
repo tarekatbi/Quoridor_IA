@@ -75,7 +75,7 @@ Pour ce test nous avons fait jouer `walk` en J1 contre `Aléatoire`en J2.
 Voilà nos résultats:
 
 <p float="left">
-<img src="./Scores_walk_aleatoire.png" alt="PAG" width="70%"/>
+<img src="./docs/Scores_walk_aleatoire.png" alt="PAG" width="70%"/>
 </p>
 
 On remarque que `walk` bat `Aleatoire` à plate couture. Ce qui n'est pas vraiment une grande surprise sachant que walk se concentre seulement sur le mouvement que sur les murs, on a aussi remarqué que parfois le J2 se trouve bloquer par ses propres murs.
