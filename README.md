@@ -83,7 +83,7 @@ On remarque que `walk` bat `Aleatoire` à plate couture. Ce qui n'est pas vraime
 ### Aleatoire vs TitForTat
 
 <p float="left">
-<img src="./Scores_aleatoire_titFortat.png" alt="PAG" width="70%"/>
+<img src="./docs/Scores_aleatoire_titFortat.png" alt="PAG" width="70%"/>
 </p>
 
 On remarque que TitFortat et Aleatoire ont des reultats très proches mais TitForThat prend la victoire.
@@ -91,7 +91,7 @@ On remarque que TitFortat et Aleatoire ont des reultats très proches mais TitFo
 ### Walk vs Stochastique
 
 <p float="left">
-<img src="./Scores_stochastique_walk.png" alt="PAG" width="70%"/>
+<img src="./docs/Scores_stochastique_walk.png" alt="PAG" width="70%"/>
 </p>
 
 On voit encore une fois l'efficacité de la simplicité de l'algorithme de walk contre un algorithme stochastique.
@@ -99,7 +99,7 @@ On voit encore une fois l'efficacité de la simplicité de l'algorithme de walk 
 ### Stochastique vs Aleatoire
 
 <p float="left">
-<img src="./Scores_stochastique_aleatoire.png" alt="PAG" width="70%"/>
+<img src="./docs/Scores_stochastique_aleatoire.png" alt="PAG" width="70%"/>
 </p>
 
 Stochastique est un version plus sophistiquée de la stratégie aléatoire, elle prend en compte les mouvements et les poses de murs de manière équilibrée, elle est capable de s'adapter aux mouvements de l'adversaire et de réagir en conséquence.
@@ -108,7 +108,7 @@ Stochastique est un version plus sophistiquée de la stratégie aléatoire, elle
 ### BlockIt vs Aleatoire
 
 <p float="left">
-<img src="./Scores_block_aleatoire.png" alt="PAG" width="70%"/>
+<img src="./docs/Scores_block_aleatoire.png" alt="PAG" width="70%"/>
 </p>
 
 On remarque que la stratégie BlockIt gagne légerment contre aléatorie.
@@ -116,7 +116,7 @@ On remarque que la stratégie BlockIt gagne légerment contre aléatorie.
 ### BlockIt vs Walk
 
 <p float="left">
-<img src="./Scores_block_walk.png" alt="PAG" width="70%"/>
+<img src="./docs/Scores_block_walk.png" alt="PAG" width="70%"/>
 </p>
 
 La stratégie walk encore une fois gagne avec efficacité par le fait qu'elle se concentre sur le mouvement, par contre blockIt en essayant de la bloquer se bloque soi meme en plus du fait qu'on peut pas bloquer toute la ligne.
@@ -124,7 +124,7 @@ La stratégie walk encore une fois gagne avec efficacité par le fait qu'elle se
 ### BlockIt vs Stochastique
 
 <p float="left">
-<img src="./Scores_block_stochastique.png" alt="PAG" width="70%"/>
+<img src="./docs/Scores_block_stochastique.png" alt="PAG" width="70%"/>
 </p>
 
 BlockIt perd contre stochastique.
@@ -132,22 +132,22 @@ BlockIt perd contre stochastique.
 ### BlockIt vs TitForTat
 
 <p float="left">
-<img src="./Scores_block_tit.png" alt="PAG" width="70%"/>
+<img src="./docs/Scores_block_tit.png" alt="PAG" width="70%"/>
 </p>
 
 BlockIt perd légérement contre titFortat.
 
 ## Stratégie BlockIt
 
-<img src="./STRATEGIE BLOCK IT-1.png" alt="PAG" width="70%"/>
+<img src="./docs/STRATEGIE BLOCK IT-1.png" alt="PAG" width="70%"/>
 
 
 ## Extension de la stratégie BlockIt
 
-<img src="./STRATEGIE BLOCK IT-2.png" alt="PAG" width="70%"/>
-<img src="./STRATEGIE BLOCK IT-3.png" alt="PAG" width="70%"/>
+<img src="./docs/STRATEGIE BLOCK IT-2.png" alt="PAG" width="70%"/>
+<img src="./docs/STRATEGIE BLOCK IT-3.png" alt="PAG" width="70%"/>
 
 ## Tableau de comparaison
 
-<img src="./strategies_tableau.png" alt="PAG" width="70%"/>
+<img src="./docs/strategies_tableau.png" alt="PAG" width="70%"/>
 
